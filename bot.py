@@ -4,9 +4,9 @@ from splinter import Browser
 
 class SupremeBot:
     def __init__(self, debug=False, **info):
-        self.base = "https://www.supremenewyork.com/"
-        self.shop_ext = "shop/all/"
-        self.checkout_ext = "checkout/"
+        self.base = 'https://www.supremenewyork.com/'
+        self.shop_ext = 'shop/all/'
+        self.checkout_ext = 'checkout/'
         self.info = info
         self.debug = debug
 
@@ -15,10 +15,10 @@ class SupremeBot:
             print(out)
 
     def init_browser(self):
-        self.b = Browser("chrome")
+        self.b = Browser('chrome')
     
     def find_product(self):
-        url = "{}{}{}".format(self.base, self.shop_ext, self.info["category"])
+        url = '{}{}{}'.format(self.base, self.shop_ext, self.info['category'])
         self.debug_console(url)
         r = requests.get(url, timeout=5).text
         soup = bs4.BeautifulSoup(r, 'lxml')
@@ -26,35 +26,42 @@ class SupremeBot:
         temp_tuple = []
         temp_link = []
 
-        for link in soup.find_all("a", href=True):
-            temp_tuple.append((link["href"], link.text))
+        for link in soup.find_all('a', href=True):
+            temp_tuple.append((link['href'], link.text))
         #self.debug_console(temp_tuple) 
         for i in temp_tuple:
-            if i[1] == self.info["product"] or i[1] == self.info["color"]:
+            if i[1] == self.info['product'] or i[1] == self.info['color']:
                 temp_link.append(i[0])
         self.debug_console(temp_link)
         #self.final_link = list(set([x for x in temp_link if temp_link.count(x) == 2]))
-        print(temp_link[0])
-    
-    
-if __name__ == "__main__":
+        self.final_link = temp_link[0]
+        print(self.final_link)
+
+    def visit_site(self):
+        self.b.visit('{}{}'.format(self.base, str(self.final_link)))
+        self.b.find_option_by_text(self.info['size']).click()
+        self.b.find_by_value('add to basket').click()
+
+
+
+if __name__ == '__main__':
     INFO = {
-            "product": "S/S Pocket Tee",
-            "color": "Black",
-            "size": "Medium",
-            "category": "tops_sweaters",
-            "namefield": "example",
-            "emailfield": "example@example.com",
-            "phonefield": "XXXXXXXXXX",
-            "addressfield": "example road",
-            "city": "example",
-            "zip": "42155",
-            "country": "US",
-            "card": "visa",
-            "number": "1234123412341234",
-            "month": "09",
-            "year": "2020",
-            "ccv": "123"
+            'product': 'S/S Pocket Tee',
+            'color': 'Black',
+            'size': 'Medium',
+            'category': 'tops_sweaters',
+            'namefield': 'example',
+            'emailfield': 'example@example.com',
+            'phonefield': 'XXXXXXXXXX',
+            'addressfield': 'example road',
+            'city': 'example',
+            'zip': '42155',
+            'country': 'US',
+            'card': 'visa',
+            'number': '1234123412341234',
+            'month': '09',
+            'year': '2020',
+            'ccv': '123'
             }
     bot = SupremeBot(True,**INFO)
     bot.find_product()
