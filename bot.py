@@ -1,4 +1,7 @@
 import requests
+import json
+from colorama import init
+from colorama import Fore, Back, Style
 import bs4
 from splinter import Browser
 
@@ -15,27 +18,49 @@ class SupremeBot:
             print(out)
 
     def init_browser(self):
-        self.b = Browser('chrome', incognito=True)#,headless=True)
+        self.b = Browser('chrome', incognito=True)#, headless=True)
     
-    def find_product(self):
-        url = '{}{}{}'.format(self.base, self.shop_ext, self.info['category'])
-        self.debug_console(url)
-        r = requests.get(url, timeout=5).text
-        soup = bs4.BeautifulSoup(r, 'lxml')
-        #self.debug_console(soup)
-        temp_tuple = []
-        temp_link = []
+    def get_pids_prelaunch(self):
+        headers = {
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+            'Cache-Control': 'max-age=0',
+            'Connection': 'keep-alive',
+            'If-None-Match': '"MnhlSMUKPPVW1gPfswixCrrWB9Y="',
+        }
 
-        for link in soup.find_all('a', href=True):
-            temp_tuple.append((link['href'], link.text))
-        #self.debug_console(temp_tuple) 
-        for i in temp_tuple:
-            if i[1] == self.info['product'] or i[1] == self.info['color']:
-                temp_link.append(i[0])
-        self.debug_console(temp_link)
-        #self.final_link = list(set([x for x in temp_link if temp_link.count(x) == 2]))
-        self.final_link = 'shop/tops-sweaters/x6vo2ze7i/nwszmv5ot'#temp_link[0]
-        print(self.final_link)
+        response = requests.get(self.base+'shop.json', headers=headers)
+        a = json.loads(response.text)
+
+        products = a['products_and_categories']
+
+        fname = 'pids'
+        print(Fore.CYAN + "Scraping...")
+        print(Fore.WHITE)
+
+        f = open('{}.txt'.format(fname),"w")
+        f.truncate()
+
+        for product in products['new']:
+            pid = product['id']
+            pname = product['name']
+            pcategory = product['category_name']
+            f.write(str(pid) + "\n")
+            print(str(pid) + " - "+ str(pname) + " - " + str(pcategory))
+
+    def find_product(self):
+        page = requests.get(self.base+self.shop_ext+self.info['category'])
+        if page.status_code == 200:
+            soup = bs4.BeautifulSoup(page.content, 'html.parser')
+            # look for class 'name-link'
+            for i in soup.select("div.product-name a.name-link"):
+                print(str(i))
+        else:
+            print('error: recieved response code', page.status_code)
+
 
     def visit_site(self):
         self.b.visit('{}{}'.format(self.base, str(self.final_link)))
@@ -67,8 +92,9 @@ class SupremeBot:
         #self.b.find_by_value('process payment').click()
 
     def main(self):
-        self.init_browser()
+        #self.get_pids_prelaunch()
         self.find_product()
+        self.init_browser()
         self.visit_site()
         self.checkout_func()
 
@@ -85,7 +111,7 @@ if __name__ == '__main__':
             'addressfield': 'example road',
             'city': 'cincinnati',
             'state': 'OH',
-            'zip': '42152',
+            'zip': '45219',
             'country': 'USA',
             'card': 'Credit Card',
             'number': '1234123412341234',
@@ -93,5 +119,6 @@ if __name__ == '__main__':
             'year': '2020',
             'ccv': '123'
             }
-    bot = SupremeBot(True,**INFO)
-    bot.main()
+    bot = SupremeBot(False,**INFO)
+    #bot.main()
+    bot.find_product()
