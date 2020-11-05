@@ -23,4 +23,4 @@ class Bot:
             for j in styles:
                 if i['href'] == j['href']:
                     return i['href'] #they match
-        return False
+        return names[0]['href'] #default condition
