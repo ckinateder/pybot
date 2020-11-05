@@ -1,4 +1,4 @@
-import modules.supreme as supreme
+import supreme, bot
 
 if __name__ == '__main__':
     INFO = {

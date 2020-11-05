@@ -1,5 +1,5 @@
 import requests, json, bs4
-import modules.bot as bot #my own
+import bot #my own
 from colorama import init
 from colorama import Fore, Back, Style
 from splinter import Browser
