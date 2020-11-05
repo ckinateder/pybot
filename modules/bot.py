@@ -1,8 +1,6 @@
-import requests
-import json
+import requests, json, bs4
 from colorama import init
 from colorama import Fore, Back, Style
-import bs4
 from splinter import Browser
 
 class Bot:

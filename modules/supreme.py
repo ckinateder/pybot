@@ -1,9 +1,7 @@
-import requests
-import json
+import requests, json, bs4
+import modules.bot as bot #my own
 from colorama import init
 from colorama import Fore, Back, Style
-import bs4
-import bot
 from splinter import Browser
 
 class SupremeBot(bot.Bot):

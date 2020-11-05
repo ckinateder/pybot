@@ -1,4 +1,4 @@
-import supreme
+import modules.supreme as supreme
 
 if __name__ == '__main__':
     INFO = {
