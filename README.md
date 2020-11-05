@@ -6,4 +6,4 @@ node.js once the proof is completed.
 
 ## Usage
 
-`python main.py`
+`python src/main.py`
