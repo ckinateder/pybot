@@ -2,10 +2,10 @@ import supreme, bot
 
 if __name__ == '__main__':
     INFO = {
-            'product': 'Spray Hooded Sweatshirt',
-            'color': 'White',
+            'product': 'Hooded Down Jacket ',
+            'color': 'Flourescent Blue',
             'size': 'Medium',
-            'category': 'sweatshirts',
+            'category': 'jackets',
             'namefield': 'example',
             'emailfield': 'example@example.com',
             'phonefield': 'XXXXXXXXXX',
