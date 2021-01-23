@@ -7,3 +7,7 @@ node.js once the proof is completed.
 ## Usage
 
 `python src/main.py`
+
+## Demo
+
+![demo](pybot-proof.gif)
